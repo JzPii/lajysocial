@@ -227,8 +227,8 @@ class SocialMediaAutoSurfer {
         return;
       }
 
-      // Pick a random visible post
-      const targetPost = visiblePosts[Math.floor(Math.random() * visiblePosts.length)];
+      // Pick the first visible unengaged post (sequential progression)
+      const targetPost = visiblePosts[0];
       targetPost.setAttribute('data-surfer-engaged', 'true');
       this.sessionStats.totalPostsViewed++;
 
