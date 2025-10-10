@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 420px;
+      padding: 16px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #412036 0%, #000000 100%);
+      color: white;
+      margin: 0;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .header p {
+      margin: 4px 0 0 0;
+      font-size: 11px;
+      opacity: 0.75;
+    }
+
+    .status {
+      text-align: center;
+      margin-bottom: 12px;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .status.active {
+      background: rgba(76, 175, 80, 0.25);
+      border-color: rgba(76, 175, 80, 0.4);
+    }
+
+    .status.inactive {
+      background: rgba(244, 67, 54, 0.25);
+      border-color: rgba(244, 67, 54, 0.4);
+    }
+
+    #status-text {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .card-header {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-icon {
+      font-size: 15px;
+    }
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-start {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .btn-start:hover {
+      background: #45a049;
+    }
+
+    .btn-stop {
+      background: #f44336;
+      color: white;
+    }
+
+    .btn-stop:hover {
+      background: #da190b;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .setting-group {
+      margin-bottom: 4px;
+    }
+
+    .setting-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .setting-group label {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      transition: background 0.2s;
+      margin-bottom: 0;
+    }
+
+    .checkbox-label:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .checkbox-label span {
+      font-size: 12px;
+    }
+
+    .setting-group input[type="range"] {
+      width: 100%;
+      margin-bottom: 1px;
+      margin-top: 1px;
+      height: 4px;
+    }
+
+    .setting-group input[type="checkbox"] {
+      margin-right: 8px;
+      margin-top: 0;
+      margin-bottom: 0;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .range-value {
+      font-size: 10px;
+      opacity: 0.65;
+      margin-top: 1px;
+      margin-bottom: 0;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.15);
+      margin: 8px 0;
+    }
+
+    .range-container {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .range-input {
+      flex: 1;
+    }
+
+    .range-input input {
+      width: 100%;
+    }
+
+    .range-separator {
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .platform-info {
+      text-align: center;
+      font-size: 10px;
+      opacity: 0.75;
+      margin-top: 3px;
+    }
+
+    .warning {
+      background: rgba(255, 193, 7, 0.2);
+      border: 1px solid rgba(255, 193, 7, 0.4);
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 12px;
+      font-size: 10px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🌊 Auto Surfer</h1>
+  </div>
+
+  <div id="status" class="status inactive">
+    <div id="status-text">Inactive</div>
+    <div id="platform-text" class="platform-info">Detecting platform...</div>
+  </div>
+
+  <div class="controls">
+    <button id="startBtn" class="btn btn-start">Start Surfing</button>
+    <button id="stopBtn" class="btn btn-stop" disabled>Stop</button>
+  </div>
+
+  <!-- Scrolling Card -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-icon">📜</span>
+      <span>Auto Scrolling</span>
+    </div>
+    <div class="card-content">
+      <div class="setting-group">
+        <label>Scroll Speed Range: <span id="scrollSpeedValue">2s - 4s</span></label>
+        <div class="range-container">
+          <div class="range-input">
+            <input type="range" id="scrollSpeedMin" min="1000" max="20000" step="1000" value="2000">
+            <div class="range-value">Min: <span id="scrollSpeedMinValue">2s</span></div>
+          </div>
+          <div class="range-separator">-</div>
+          <div class="range-input">
+            <input type="range" id="scrollSpeedMax" min="1000" max="30000" step="1000" value="4000">
+            <div class="range-value">Max: <span id="scrollSpeedMaxValue">4s</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auto Like Card -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-icon">❤️</span>
+      <span>Auto Like</span>
+    </div>
+    <div class="card-content">
+      <div class="setting-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="enableAutoLike">
+          <span>Enable Auto Like</span>
+        </label>
+      </div>
+
+      <div class="setting-group">
+        <label for="likeDelay">Like Delay: <span id="likeDelayValue">5s</span></label>
+        <input type="range" id="likeDelay" min="2000" max="30000" step="1000" value="5000">
+        <div class="range-value">More Frequent ← → Less Frequent</div>
+      </div>
+
+      <div class="setting-group">
+        <label for="likeProbability">Like Probability: <span id="likeProbabilityValue">70%</span></label>
+        <input type="range" id="likeProbability" min="0" max="100" step="5" value="70">
+        <div class="range-value">Never ← → Always</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auto Comment Card -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-icon">💬</span>
+      <span>Auto Comment</span>
+    </div>
+    <div class="card-content">
+      <div class="setting-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="enableAutoComment">
+          <span>Enable Auto Comments</span>
+        </label>
+      </div>
+
+      <div class="setting-group">
+        <label for="commentDelay">Comment Delay: <span id="commentDelayValue">8s</span></label>
+        <input type="range" id="commentDelay" min="5000" max="60000" step="1000" value="8000">
+        <div class="range-value">More Frequent ← → Less Frequent</div>
+      </div>
+
+      <div class="setting-group">
+        <label for="commentProbability">Comment Probability: <span id="commentProbabilityValue">30%</span></label>
+        <input type="range" id="commentProbability" min="0" max="100" step="5" value="30">
+        <div class="range-value">Never ← → Always</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- See More Card -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-icon">👁️</span>
+      <span>Expand Content</span>
+    </div>
+    <div class="card-content">
+      <div class="setting-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="enableSeeMore">
+          <span>Auto Click "See More"</span>
+        </label>
+      </div>
+
+      <div class="setting-group">
+        <label for="seeMoreDelay">Click Delay: <span id="seeMoreDelayValue">2s</span></label>
+        <input type="range" id="seeMoreDelay" min="1000" max="10000" step="500" value="2000">
+        <div class="range-value">Faster ← → Slower</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Test Buttons -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-icon">🧪</span>
+      <span>Testing Tools</span>
+    </div>
+    <div class="card-content">
+      <button id="testSeeMoreBtn" class="btn" style="background: #FF9800; color: white;">Test "See More"</button>
+      <button id="testLikeBtn" class="btn" style="background: #E91E63; color: white;">Test "Like Post"</button>
+      <button id="testCommentBtn" class="btn" style="background: #9C27B0; color: white;">Test "Comment"</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
