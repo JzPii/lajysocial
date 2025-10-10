@@ -1,6 +1,6 @@
-# LajySocial - Tiện ích Tự động Tương tác Mạng xã hội
+# LajySocial - Tự động Tương tác Mạng xã hội
 
-Tiện ích mở rộng Chrome giúp tự động hóa việc duyệt và tương tác trên các nền tảng mạng xã hội bao gồm Twitter/X, Facebook, Instagram, LinkedIn và Reddit.
+Công cụ social cho người vừa lười vừa anti social như mình nhưng vẫn phải social. Chạy hoàn toàn sạch. không backend không API. Đảm bảo clean không bao giờ lo bị ban. Twitter/X, Facebook, Instagram, LinkedIn và Reddit.
 
 ## 🌟 Tính năng
 
