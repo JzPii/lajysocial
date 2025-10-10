@@ -39,7 +39,7 @@ Công cụ social cho người vừa lười vừa anti social như mình nhưng
 1. Ở trang Tiện ích mở rộng, tìm công tắc **"Chế độ nhà phát triển"** (Developer mode) ở góc trên bên phải
 2. Nhấp vào công tắc để **BẬT** (màu xanh)
 
-![Bật chế độ Developer](https://i.imgur.com/example-dev-mode.png)
+![Bật chế độ Developer]
 
 ### Bước 4: Tải tiện ích vào Chrome
 
@@ -49,7 +49,7 @@ Công cụ social cho người vừa lười vừa anti social như mình nhưng
 4. Chọn thư mục chứa tiện ích (thư mục có file `manifest.json`)
 5. Nhấp **"Chọn thư mục"** (Select Folder)
 
-![Load unpacked](https://i.imgur.com/example-load-unpacked.png)
+![Load unpacked]
 
 ### Bước 5: Xác nhận cài đặt thành công
 
@@ -57,7 +57,7 @@ Công cụ social cho người vừa lười vừa anti social như mình nhưng
 2. Icon 🌊 sẽ hiển thị trên thanh công cụ của Chrome
 3. Nếu không thấy icon, nhấp vào **icon puzzle** (hình mảnh ghép) và ghim tiện ích
 
-![Extension installed](https://i.imgur.com/example-installed.png)
+![Extension installed]
 
 ## 🚀 Cách sử dụng
 
