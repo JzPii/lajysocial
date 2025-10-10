@@ -4,16 +4,15 @@ Công cụ social cho người vừa lười vừa anti social như mình nhưng
 
 ## 🌟 Tính năng
 
-- **Tự động cuộn trang** với tốc độ ngẫu nhiên giống con người
-- **Tự động thích bài viết** với tỷ lệ phần trăm có thể điều chỉnh
-- **Tự động bình luận** với các câu trả lời tích cực và tỷ lệ tùy chỉnh
-- **Tự động nhấp "Xem thêm"** để mở rộng nội dung bài viết
-- **Tương tác tuần tự**: Xử lý từng bài viết một cách tự nhiên (cuộn → mở rộng → thích → bình luận)
-- **Mô phỏng hành vi người thật**: Con trỏ chuột chuyển động mượt mà, độ trễ ngẫu nhiên, gõ từng ký tự
-- **Tùy chỉnh xác suất**: Điều chỉnh tỷ lệ thích/bình luận để tránh tương tác với mọi bài viết
-- **Thống kê phiên làm việc**: Theo dõi số bài viết đã xem, thích, bình luận
+- **Tự lướt** với tốc độ ngẫu nhiên giống mấy thằng lướt lướt
+- **Tự động thả tim** với tỷ lệ phần trăm có thể điều chỉnh. 
+- **Tự động mõm** với các câu trả lời tích cực và tỷ lệ tùy chỉnh (Ủng hộ để sau này làm tính năng chửi)
+- **Giả vờ đọc chắm chú "Xem thêm"** để mở rộng nội dung bài viết
 
-## 📥 Cài đặt (Dành cho người dùng không chuyên)
+- **Tùy chỉnh xác suất như thật**: Điều chỉnh tỷ lệ thích/bình luận để tránh tương tác với mọi bài viết
+- **Thống kê phiên làm việc**: Làm xong có report luôn
+
+## 📥 Cài đặt
 
 ### Bước 1: Tải xuống tiện ích
 
@@ -63,15 +62,6 @@ Công cụ social cho người vừa lười vừa anti social như mình nhưng
 
 ### Bước 1: Truy cập mạng xã hội
 
-1. Mở một trong các trang web được hỗ trợ:
-   - Twitter/X: https://twitter.com hoặc https://x.com
-   - Facebook: https://www.facebook.com
-   - Instagram: https://www.instagram.com
-   - LinkedIn: https://www.linkedin.com
-   - Reddit: https://www.reddit.com
-
-2. Đăng nhập vào tài khoản của bạn (nếu chưa đăng nhập)
-
 ### Bước 2: Mở bảng điều khiển tiện ích
 
 1. Nhấp vào **icon 🌊** của tiện ích trên thanh công cụ
@@ -79,10 +69,10 @@ Công cụ social cho người vừa lười vừa anti social như mình nhưng
 
 ### Bước 3: Cấu hình cài đặt
 
-**📜 Cuộn tự động:**
+**📜 tự lướt:**
 - **Tốc độ cuộn**: Kéo 2 thanh trượt để đặt thời gian giữa các lần cuộn (từ 1-30 giây)
 
-**❤️ Tự động thích:**
+**❤️ Tự động thả tim:**
 - Bật công tắc **"Enable Auto Like"**
 - **Like Delay**: Thời gian chờ sau khi thích (2-30 giây)
 - **Like Probability**: Xác suất thích bài viết (0-100%)
@@ -90,7 +80,7 @@ Công cụ social cho người vừa lười vừa anti social như mình nhưng
   - 100% = Luôn thích mọi bài
   - 70% (mặc định) = Thích khoảng 7/10 bài viết
 
-**💬 Tự động bình luận:**
+**💬 Tự động mõm:**
 - Bật công tắc **"Enable Auto Comments"**
 - **Comment Delay**: Thời gian chờ sau khi bình luận (5-60 giây)
 - **Comment Probability**: Xác suất bình luận (0-100%)
@@ -98,7 +88,7 @@ Công cụ social cho người vừa lười vừa anti social như mình nhưng
   - 100% = Luôn bình luận mọi bài
   - 30% (mặc định) = Bình luận khoảng 3/10 bài viết
 
-**👁️ Mở rộng nội dung:**
+**👁️ giả vờ đọc chăm chú:**
 - Bật công tắc **"Auto Click See More"**
 - **Click Delay**: Thời gian giữa các lần nhấp (1-10 giây)
 
