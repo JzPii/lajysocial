@@ -13,8 +13,15 @@
     }
 
     .header {
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 14px;
+    }
+
+    .header-title {
+      flex: 1;
+      text-align: center;
     }
 
     .header h1 {
@@ -28,6 +35,70 @@
       margin: 4px 0 0 0;
       font-size: 11px;
       opacity: 0.75;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 4px;
+    }
+
+    .icon-btn {
+      width: 28px;
+      height: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: scale(1.05);
+    }
+
+    body.light-mode {
+      background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+      color: #333;
+    }
+
+    body.light-mode .card,
+    body.light-mode .status {
+      background: rgba(255, 255, 255, 0.8);
+      border-color: rgba(0, 0, 0, 0.1);
+      color: #333;
+    }
+
+    body.light-mode .icon-btn {
+      background: rgba(0, 0, 0, 0.05);
+      color: #333;
+      border-color: rgba(0, 0, 0, 0.2);
+    }
+
+    body.light-mode .icon-btn:hover {
+      background: rgba(0, 0, 0, 0.1);
+      border-color: rgba(0, 0, 0, 0.3);
+    }
+
+    body.light-mode .btn-start {
+      background: #4CAF50;
+      color: white;
+    }
+
+    body.light-mode .btn-stop {
+      background: #f44336;
+      color: white;
+    }
+
+    body.light-mode .divider {
+      background: rgba(0, 0, 0, 0.1);
     }
 
     .status {
@@ -236,7 +307,14 @@
 </head>
 <body>
   <div class="header">
-    <h1>🌊 Auto Surfer</h1>
+    <div style="width: 60px;"></div>
+    <div class="header-title">
+      <h1 id="title">🌊 Auto Surfer</h1>
+    </div>
+    <div class="header-buttons">
+      <button id="langBtn" class="icon-btn" title="Switch Language">🇻🇳</button>
+      <button id="themeBtn" class="icon-btn" title="Toggle Theme">☀️</button>
+    </div>
   </div>
 
   <div id="status" class="status inactive">
@@ -253,20 +331,20 @@
   <div class="card">
     <div class="card-header">
       <span class="card-icon">📜</span>
-      <span>Auto Scrolling</span>
+      <span id="autoScrollingLabel">Auto Scrolling</span>
     </div>
     <div class="card-content">
       <div class="setting-group">
-        <label>Scroll Speed Range: <span id="scrollSpeedValue">2s - 4s</span></label>
+        <label><span id="scrollSpeedRangeLabel">Scroll Speed Range</span>: <span id="scrollSpeedValue">2s - 4s</span></label>
         <div class="range-container">
           <div class="range-input">
             <input type="range" id="scrollSpeedMin" min="1000" max="20000" step="1000" value="2000">
-            <div class="range-value">Min: <span id="scrollSpeedMinValue">2s</span></div>
+            <div class="range-value"><span id="minLabel">Min</span>: <span id="scrollSpeedMinValue">2s</span></div>
           </div>
           <div class="range-separator">-</div>
           <div class="range-input">
             <input type="range" id="scrollSpeedMax" min="1000" max="30000" step="1000" value="4000">
-            <div class="range-value">Max: <span id="scrollSpeedMaxValue">4s</span></div>
+            <div class="range-value"><span id="maxLabel">Max</span>: <span id="scrollSpeedMaxValue">4s</span></div>
           </div>
         </div>
       </div>
@@ -278,13 +356,13 @@
     <div class="card-header">
       <input type="checkbox" id="enableSeeMore">
       <span class="card-icon">👁️</span>
-      <span>Expand Content</span>
+      <span id="expandContentLabel">Expand Content</span>
     </div>
     <div class="card-content">
       <div class="setting-group">
-        <label for="seeMoreDelay">Click Delay: <span id="seeMoreDelayValue">2s</span></label>
+        <label for="seeMoreDelay"><span id="clickDelayLabel">Click Delay</span>: <span id="seeMoreDelayValue">2s</span></label>
         <input type="range" id="seeMoreDelay" min="1000" max="10000" step="500" value="2000">
-        <div class="range-value">Faster ← → Slower</div>
+        <div class="range-value" id="fasterSlowerLabel">Faster ← → Slower</div>
       </div>
     </div>
   </div>
@@ -294,19 +372,19 @@
     <div class="card-header">
       <input type="checkbox" id="enableAutoLike">
       <span class="card-icon">❤️</span>
-      <span>Auto Like</span>
+      <span id="autoLikeLabel">Auto Like</span>
     </div>
     <div class="card-content">
       <div class="setting-group">
-        <label for="likeDelay">Like Delay: <span id="likeDelayValue">5s</span></label>
+        <label for="likeDelay"><span id="likeDelayLabel">Like Delay</span>: <span id="likeDelayValue">5s</span></label>
         <input type="range" id="likeDelay" min="2000" max="30000" step="1000" value="5000">
-        <div class="range-value">More Frequent ← → Less Frequent</div>
+        <div class="range-value" id="moreFrequentLabel1">More Frequent ← → Less Frequent</div>
       </div>
 
       <div class="setting-group">
-        <label for="likeProbability">Like Probability: <span id="likeProbabilityValue">70%</span></label>
+        <label for="likeProbability"><span id="likeProbabilityLabel">Like Probability</span>: <span id="likeProbabilityValue">70%</span></label>
         <input type="range" id="likeProbability" min="0" max="100" step="5" value="70">
-        <div class="range-value">Never ← → Always</div>
+        <div class="range-value" id="neverAlwaysLabel1">Never ← → Always</div>
       </div>
     </div>
   </div>
@@ -316,19 +394,19 @@
     <div class="card-header">
       <input type="checkbox" id="enableAutoComment">
       <span class="card-icon">💬</span>
-      <span>Auto Comment</span>
+      <span id="autoCommentLabel">Auto Comment</span>
     </div>
     <div class="card-content">
       <div class="setting-group">
-        <label for="commentDelay">Comment Delay: <span id="commentDelayValue">8s</span></label>
+        <label for="commentDelay"><span id="commentDelayLabel">Comment Delay</span>: <span id="commentDelayValue">8s</span></label>
         <input type="range" id="commentDelay" min="5000" max="60000" step="1000" value="8000">
-        <div class="range-value">More Frequent ← → Less Frequent</div>
+        <div class="range-value" id="moreFrequentLabel2">More Frequent ← → Less Frequent</div>
       </div>
 
       <div class="setting-group">
-        <label for="commentProbability">Comment Probability: <span id="commentProbabilityValue">30%</span></label>
+        <label for="commentProbability"><span id="commentProbabilityLabel">Comment Probability</span>: <span id="commentProbabilityValue">30%</span></label>
         <input type="range" id="commentProbability" min="0" max="100" step="5" value="30">
-        <div class="range-value">Never ← → Always</div>
+        <div class="range-value" id="neverAlwaysLabel2">Never ← → Always</div>
       </div>
     </div>
   </div>
@@ -339,7 +417,7 @@
   <div class="card">
     <div class="card-header">
       <span class="card-icon">🧪</span>
-      <span>Testing Tools</span>
+      <span id="testingToolsLabel">Testing Tools</span>
     </div>
     <div class="card-content">
       <button id="testSeeMoreBtn" class="btn" style="background: #FF9800; color: white;">Test "See More"</button>
