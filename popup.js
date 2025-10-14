@@ -30,7 +30,77 @@ document.addEventListener('DOMContentLoaded', function() {
   const seeMoreDelaySlider = document.getElementById('seeMoreDelay');
   const seeMoreDelayValue = document.getElementById('seeMoreDelayValue');
 
+  const langBtn = document.getElementById('langBtn');
+  const themeBtn = document.getElementById('themeBtn');
+
   let currentTab = null;
+  let currentLang = 'en';
+  let currentTheme = 'dark';
+
+  const translations = {
+    en: {
+      title: "Auto Surfer",
+      startBtn: "Start Surfing",
+      stopBtn: "Stop",
+      statusActive: "Active - Auto Surfing",
+      statusInactive: "Inactive",
+      detectingPlatform: "Detecting platform...",
+      platform: "Platform",
+      contentScriptNotLoaded: "Content script not loaded",
+      pleaseRefresh: "Please refresh the page",
+      platformNotSupported: "Platform not supported",
+      autoScrolling: "Auto Scrolling",
+      expandContent: "Expand Content",
+      autoLike: "Auto Like",
+      autoComment: "Auto Comment",
+      testingTools: "Testing Tools",
+      scrollSpeedRange: "Scroll Speed Range",
+      clickDelay: "Click Delay",
+      likeDelay: "Like Delay",
+      likeProbability: "Like Probability",
+      commentDelay: "Comment Delay",
+      commentProbability: "Comment Probability",
+      min: "Min",
+      max: "Max",
+      fasterSlower: "Faster ← → Slower",
+      moreFrequent: "More Frequent ← → Less Frequent",
+      neverAlways: "Never ← → Always",
+      testSeeMore: 'Test "See More"',
+      testLike: 'Test "Like Post"',
+      testComment: 'Test "Comment"'
+    },
+    vi: {
+      title: "Lướt Tự Động",
+      startBtn: "Bắt Đầu",
+      stopBtn: "Dừng",
+      statusActive: "Ai đang lướt mệt rã rời 😪",
+      statusInactive: "Tool Ai đã sẵn sàng!! Ấn nút Bắt đầu để lướt hoy",
+      detectingPlatform: "Đang nhận diện nền tảng...",
+      platform: "Nền tảng",
+      contentScriptNotLoaded: "Vội thế! Chưa tải xong web đã mở tool rồi",
+      pleaseRefresh: "Làm ơn F5/tải lại web giùm tui",
+      platformNotSupported: "Nền tảng không được hỗ trợ",
+      autoScrolling: "Tự lướt",
+      expandContent: "Tự ấn xem thêm",
+      autoLike: "Tự thả tim",
+      autoComment: "Bình Luận Tự Động",
+      testingTools: "Công Cụ Kiểm Tra",
+      scrollSpeedRange: "Phạm Vi Tốc Độ Cuộn",
+      clickDelay: "Độ Trễ Click",
+      likeDelay: "Độ Trễ Thích",
+      likeProbability: "Xác Suất Thích",
+      commentDelay: "Độ Trễ Bình Luận",
+      commentProbability: "Xác Suất Bình Luận",
+      min: "Tối thiểu",
+      max: "Tối đa",
+      fasterSlower: "Nhanh hơn ← → Chậm hơn",
+      moreFrequent: "Thường xuyên hơn ← → Ít hơn",
+      neverAlways: "Không bao giờ ← → Luôn luôn",
+      testSeeMore: 'test Tự ấn xem thêm',
+      testLike: 'test Tự thả tim',
+      testComment: 'test Tự bình luận'
+    }
+  };
 
   async function getCurrentTab() {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -38,6 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   async function updateStatus() {
+    const t = translations[currentLang];
+
     try {
       currentTab = await getCurrentTab();
 
@@ -45,34 +117,109 @@ document.addEventListener('DOMContentLoaded', function() {
 
       if (response.isActive) {
         statusDiv.className = 'status active';
-        statusText.textContent = 'Active - Auto Surfing';
+        statusText.textContent = t.statusActive;
         startBtn.disabled = true;
         stopBtn.disabled = false;
       } else {
         statusDiv.className = 'status inactive';
-        statusText.textContent = 'Inactive';
+        statusText.textContent = t.statusInactive;
         startBtn.disabled = false;
         stopBtn.disabled = true;
       }
 
       if (response.platform) {
-        platformText.textContent = `Platform: ${response.platform.charAt(0).toUpperCase() + response.platform.slice(1)}`;
+        platformText.textContent = `${t.platform}: ${response.platform.charAt(0).toUpperCase() + response.platform.slice(1)}`;
       } else {
-        platformText.textContent = 'Platform not supported';
+        platformText.textContent = t.platformNotSupported;
         startBtn.disabled = true;
       }
     } catch (error) {
       statusDiv.className = 'status inactive';
-      statusText.textContent = 'Content script not loaded';
-      platformText.textContent = 'Please refresh the page';
+      statusText.textContent = t.contentScriptNotLoaded;
+      platformText.textContent = t.pleaseRefresh;
       startBtn.disabled = true;
       stopBtn.disabled = true;
     }
   }
 
+  function toggleTheme() {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    if (currentTheme === 'light') {
+      document.body.classList.add('light-mode');
+      themeBtn.textContent = '🌙';
+    } else {
+      document.body.classList.remove('light-mode');
+      themeBtn.textContent = '☀️';
+    }
+
+    chrome.storage.sync.set({ theme: currentTheme });
+  }
+
+  function updateLanguage() {
+    const t = translations[currentLang];
+
+    // Update title and buttons
+    document.getElementById('title').textContent = `🌊 ${t.title}`;
+    startBtn.textContent = t.startBtn;
+    stopBtn.textContent = t.stopBtn;
+
+    // Update card headers
+    document.getElementById('autoScrollingLabel').textContent = t.autoScrolling;
+    document.getElementById('expandContentLabel').textContent = t.expandContent;
+    document.getElementById('autoLikeLabel').textContent = t.autoLike;
+    document.getElementById('autoCommentLabel').textContent = t.autoComment;
+    document.getElementById('testingToolsLabel').textContent = t.testingTools;
+
+    // Update labels
+    document.getElementById('scrollSpeedRangeLabel').textContent = t.scrollSpeedRange;
+    document.getElementById('minLabel').textContent = t.min;
+    document.getElementById('maxLabel').textContent = t.max;
+    document.getElementById('clickDelayLabel').textContent = t.clickDelay;
+    document.getElementById('fasterSlowerLabel').textContent = t.fasterSlower;
+    document.getElementById('likeDelayLabel').textContent = t.likeDelay;
+    document.getElementById('likeProbabilityLabel').textContent = t.likeProbability;
+    document.getElementById('moreFrequentLabel1').textContent = t.moreFrequent;
+    document.getElementById('neverAlwaysLabel1').textContent = t.neverAlways;
+    document.getElementById('commentDelayLabel').textContent = t.commentDelay;
+    document.getElementById('commentProbabilityLabel').textContent = t.commentProbability;
+    document.getElementById('moreFrequentLabel2').textContent = t.moreFrequent;
+    document.getElementById('neverAlwaysLabel2').textContent = t.neverAlways;
+
+    // Update test buttons
+    testSeeMoreBtn.textContent = t.testSeeMore;
+    testLikeBtn.textContent = t.testLike;
+    testCommentBtn.textContent = t.testComment;
+
+    // Update status text if needed
+    updateStatus();
+  }
+
+  function toggleLanguage() {
+    currentLang = currentLang === 'en' ? 'vi' : 'en';
+    langBtn.textContent = currentLang === 'en' ? '🇻🇳' : 'EN';
+    updateLanguage();
+    chrome.storage.sync.set({ language: currentLang });
+  }
+
   async function loadSettings() {
     try {
-      const result = await chrome.storage.sync.get(['surfSettings']);
+      const result = await chrome.storage.sync.get(['surfSettings', 'theme', 'language']);
+
+      if (result.theme) {
+        currentTheme = result.theme;
+        if (currentTheme === 'light') {
+          document.body.classList.add('light-mode');
+          themeBtn.textContent = '🌙';
+        }
+      }
+
+      if (result.language) {
+        currentLang = result.language;
+        langBtn.textContent = currentLang === 'en' ? '🇻🇳' : 'EN';
+        updateLanguage();
+      }
+
       if (result.surfSettings) {
         const settings = result.surfSettings;
         scrollSpeedMinSlider.value = settings.scrollSpeedMin || 2000;
@@ -220,6 +367,9 @@ document.addEventListener('DOMContentLoaded', function() {
     updateSliderValues();
     saveSettings();
   });
+
+  langBtn.addEventListener('click', toggleLanguage);
+  themeBtn.addEventListener('click', toggleTheme);
 
   loadSettings();
   updateStatus();
