@@ -209,9 +209,4 @@ Nếu gặp vấn đề:
 3. Thử tắt tiện ích, làm mới trang và bật lại
 
 ## 📄 Giấy phép
-
-Tiện ích này được cung cấp "như nó vốn có" mà không có bất kỳ đảm bảo nào. Sử dụng có trách nhiệm và tự chịu rủi ro.
-
----
-
-**Lưu ý**: Tiện ích này chỉ dành cho mục đích học tập và thử nghiệm. Người dùng phải tự chịu trách nhiệm về việc sử dụng tiện ích này.
+**Lưu ý**: Tools này chỉ dành cho mục đích hoan hỉ vui vẻ. Người dùng phải tự chịu trách nhiệm nếu có vấn đề xảy ra.
