@@ -253,6 +253,35 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
     }
   }
 
+  /**
+   * HOOK: Find submit button for comment
+   * Override this in platform subclasses for platform-specific submit button detection
+   *
+   * @param {HTMLElement} textArea - The text area element (can be used for context)
+   * @returns {HTMLElement|null} Submit button or null
+   */
+  findSubmitButton(textArea) {
+    // Default generic selectors for platforms without specific overrides
+    const selectors = [
+      '[type="submit"]',
+      'button[type="submit"]',
+      'button[aria-label*="Post"]',
+      'button[aria-label*="Submit"]',
+      'button[aria-label*="Reply"]'
+    ];
+
+    for (const selector of selectors) {
+      const btn = document.querySelector(selector);
+      if (btn && !btn.disabled) {
+        console.log(`[Submit] Found button with selector: ${selector}`);
+        return btn;
+      }
+    }
+
+    console.log('[Submit] No submit button found with default selectors');
+    return null;
+  }
+
   // ========== INITIALIZATION ==========
 
   init() {
@@ -665,10 +694,15 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
         await this.typeText(textArea, randomResponse);
         await this.sleep(1000 + Math.random() * 1000);
 
-        const submitButton = document.querySelector('[data-testid="tweetButton"], [type="submit"]');
-        if (submitButton && !submitButton.disabled) {
+        console.log('[Comment] Looking for submit button...');
+        const submitButton = this.findSubmitButton(textArea);
+
+        if (submitButton) {
+          console.log('[Comment] Clicking submit button...');
           await this.humanLikeClick(submitButton, 'Added positive comment! 💬');
           return true;
+        } else {
+          console.log('[Comment] Submit button not found or disabled');
         }
       }
       return false;
@@ -892,10 +926,26 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
       console.log('Step 8: Typing comment:', randomResponse);
 
       await this.typeText(textArea, randomResponse);
+      await this.sleep(1000 + Math.random() * 1000);
 
-      console.log('✓ Comment typed successfully (NOT submitted - this is a test)');
-      this.showNotification(`Typed: "${randomResponse}" (not submitted)`, 'info');
-      return true;
+      console.log('Step 9: Looking for submit button...');
+      const submitButton = this.findSubmitButton(textArea);
+
+      if (submitButton) {
+        console.log('Step 10: Submit button found:', submitButton);
+        console.log('  Button text:', submitButton.textContent.trim());
+        console.log('  Button aria-label:', submitButton.getAttribute('aria-label'));
+        console.log('  Button disabled:', submitButton.disabled);
+        console.log('Step 11: Clicking submit button...');
+        await this.humanLikeClick(submitButton, 'Added positive comment! 💬');
+        console.log('✓ Comment submitted successfully');
+        this.showNotification(`Submitted: "${randomResponse}"`, 'success');
+        return true;
+      } else {
+        console.log('✗ Submit button not found or disabled');
+        this.showNotification(`Typed: "${randomResponse}" (submit button not found)`, 'error');
+        return false;
+      }
 
     } catch (error) {
       console.log('[Test Comment] Error:', error);

@@ -109,4 +109,25 @@ window.FacebookAutoSurfer = class FacebookAutoSurfer extends window.BaseAutoSurf
     console.log(`Total buttons found: ${buttons.length}`);
     return buttons;
   }
+
+  findSubmitButton(textArea) {
+    // Facebook-specific submit button selectors
+    const selectors = [
+      '[aria-label*="Comment"]',
+      '[aria-label*="Post comment"]',
+      'div[role="button"][aria-label*="Post"]',
+      '[type="submit"]'
+    ];
+
+    for (const selector of selectors) {
+      const btn = document.querySelector(selector);
+      if (btn && !btn.disabled) {
+        console.log(`[Facebook Submit] Found button with selector: ${selector}`);
+        return btn;
+      }
+    }
+
+    console.log('[Facebook Submit] No submit button found');
+    return null;
+  }
 };
