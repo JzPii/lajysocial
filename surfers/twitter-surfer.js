@@ -22,4 +22,16 @@ window.TwitterAutoSurfer = class TwitterAutoSurfer extends window.BaseAutoSurfer
   getExpandKeywords() {
     return ['Show more', 'Show this thread', 'Show replies'];
   }
+
+  findSubmitButton(textArea) {
+    // Twitter-specific submit button selector
+    const btn = document.querySelector('[data-testid="tweetButton"]');
+    if (btn && !btn.disabled) {
+      console.log('[Twitter Submit] Found tweet button');
+      return btn;
+    }
+
+    console.log('[Twitter Submit] Tweet button not found or disabled');
+    return null;
+  }
 };

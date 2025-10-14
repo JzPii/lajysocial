@@ -80,6 +80,13 @@
       gap: 6px;
     }
 
+    .card-header input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      margin: 0;
+    }
+
     .card-icon {
       font-size: 15px;
     }
@@ -266,20 +273,30 @@
     </div>
   </div>
 
+  <!-- Expand Content Card -->
+  <div class="card">
+    <div class="card-header">
+      <input type="checkbox" id="enableSeeMore">
+      <span class="card-icon">👁️</span>
+      <span>Expand Content</span>
+    </div>
+    <div class="card-content">
+      <div class="setting-group">
+        <label for="seeMoreDelay">Click Delay: <span id="seeMoreDelayValue">2s</span></label>
+        <input type="range" id="seeMoreDelay" min="1000" max="10000" step="500" value="2000">
+        <div class="range-value">Faster ← → Slower</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Auto Like Card -->
   <div class="card">
     <div class="card-header">
+      <input type="checkbox" id="enableAutoLike">
       <span class="card-icon">❤️</span>
       <span>Auto Like</span>
     </div>
     <div class="card-content">
-      <div class="setting-group">
-        <label class="checkbox-label">
-          <input type="checkbox" id="enableAutoLike">
-          <span>Enable Auto Like</span>
-        </label>
-      </div>
-
       <div class="setting-group">
         <label for="likeDelay">Like Delay: <span id="likeDelayValue">5s</span></label>
         <input type="range" id="likeDelay" min="2000" max="30000" step="1000" value="5000">
@@ -297,17 +314,11 @@
   <!-- Auto Comment Card -->
   <div class="card">
     <div class="card-header">
+      <input type="checkbox" id="enableAutoComment">
       <span class="card-icon">💬</span>
       <span>Auto Comment</span>
     </div>
     <div class="card-content">
-      <div class="setting-group">
-        <label class="checkbox-label">
-          <input type="checkbox" id="enableAutoComment">
-          <span>Enable Auto Comments</span>
-        </label>
-      </div>
-
       <div class="setting-group">
         <label for="commentDelay">Comment Delay: <span id="commentDelayValue">8s</span></label>
         <input type="range" id="commentDelay" min="5000" max="60000" step="1000" value="8000">
@@ -318,28 +329,6 @@
         <label for="commentProbability">Comment Probability: <span id="commentProbabilityValue">30%</span></label>
         <input type="range" id="commentProbability" min="0" max="100" step="5" value="30">
         <div class="range-value">Never ← → Always</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- See More Card -->
-  <div class="card">
-    <div class="card-header">
-      <span class="card-icon">👁️</span>
-      <span>Expand Content</span>
-    </div>
-    <div class="card-content">
-      <div class="setting-group">
-        <label class="checkbox-label">
-          <input type="checkbox" id="enableSeeMore">
-          <span>Auto Click "See More"</span>
-        </label>
-      </div>
-
-      <div class="setting-group">
-        <label for="seeMoreDelay">Click Delay: <span id="seeMoreDelayValue">2s</span></label>
-        <input type="range" id="seeMoreDelay" min="1000" max="10000" step="500" value="2000">
-        <div class="range-value">Faster ← → Slower</div>
       </div>
     </div>
   </div>
