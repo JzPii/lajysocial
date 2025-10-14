@@ -26,7 +26,15 @@
         "https://www.linkedin.com/*",
         "https://www.reddit.com/*"
       ],
-      "js": ["content.js"],
+      "js": [
+        "surfers/base-surfer.js",
+        "surfers/facebook-surfer.js",
+        "surfers/linkedin-surfer.js",
+        "surfers/twitter-surfer.js",
+        "surfers/instagram-surfer.js",
+        "surfers/reddit-surfer.js",
+        "surfers/surfer-factory.js"
+      ],
       "run_at": "document_end"
     }
   ],
