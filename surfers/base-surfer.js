@@ -356,6 +356,7 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
           this.testCommentPost();
           break;
       }
+      return true; // Required for async sendResponse
     });
   }
 
