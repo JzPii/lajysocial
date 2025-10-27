@@ -3,20 +3,105 @@
 <head>
   <meta charset="utf-8">
   <style>
+    :root {
+      --bg-primary: #030510;
+      --glass: rgba(8, 11, 24, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-primary: #f5f7ff;
+      --text-muted: rgba(245, 247, 255, 0.7);
+      --accent: #7af5ff;
+      --accent-strong: #ff7be9;
+      --success: #2de789;
+      --danger: #ff5d71;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       width: 420px;
-      padding: 16px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #412036 0%, #000000 100%);
-      color: white;
+      min-height: 640px;
       margin: 0;
+      padding: 18px;
+      font-family: 'SF Pro Display', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text-primary);
+      background: radial-gradient(circle at 20% -10%, #1a1c50, transparent 45%), radial-gradient(circle at 80% 0%, #30113a, transparent 45%), var(--bg-primary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: '';
+      position: absolute;
+      pointer-events: none;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.6;
+      z-index: 0;
+    }
+
+    body::before {
+      width: 260px;
+      height: 260px;
+      top: -90px;
+      left: -60px;
+      background: radial-gradient(circle, rgba(122, 245, 255, 0.65), transparent 70%);
+    }
+
+    body::after {
+      width: 280px;
+      height: 280px;
+      bottom: -120px;
+      right: -80px;
+      background: radial-gradient(circle, rgba(255, 123, 233, 0.55), transparent 70%);
+    }
+
+    body.light-mode {
+      background: radial-gradient(circle at 20% -10%, #f7fbff, transparent 55%), radial-gradient(circle at 80% 0%, #ffe3fb, transparent 45%), #e8edf7;
+      color: #0d1627;
+    }
+
+    body.light-mode::before {
+      background: radial-gradient(circle, rgba(79, 181, 255, 0.4), transparent 70%);
+    }
+
+    body.light-mode::after {
+      background: radial-gradient(circle, rgba(255, 165, 213, 0.35), transparent 70%);
+    }
+
+    .app-shell {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 20px;
+      border-radius: 28px;
+      background: linear-gradient(145deg, rgba(7, 10, 26, 0.9), rgba(2, 5, 15, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 35px 70px rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(40px);
+    }
+
+    body.light-mode .app-shell {
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(8, 14, 40, 0.08);
+      box-shadow: 0 25px 55px rgba(108, 136, 189, 0.25);
     }
 
     .header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 2px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    body.light-mode .header {
+      border-bottom-color: rgba(8, 14, 40, 0.08);
     }
 
     .header-title {
@@ -24,407 +109,513 @@
       text-align: center;
     }
 
-    .header h1 {
+    .header-title h1 {
       margin: 0;
       font-size: 20px;
       font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-
-    .header p {
-      margin: 4px 0 0 0;
-      font-size: 11px;
-      opacity: 0.75;
+      letter-spacing: -0.4px;
     }
 
     .header-buttons {
       display: flex;
-      gap: 4px;
+      gap: 8px;
+      justify-content: flex-end;
     }
 
     .icon-btn {
-      width: 28px;
-      height: 28px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 6px;
-      cursor: pointer;
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
       font-size: 14px;
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      transition: all 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+      backdrop-filter: blur(18px);
     }
 
     .icon-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
       border-color: rgba(255, 255, 255, 0.5);
-      transform: scale(1.05);
-    }
-
-    body.light-mode {
-      background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
-      color: #333;
-    }
-
-    body.light-mode .card,
-    body.light-mode .status {
-      background: rgba(255, 255, 255, 0.8);
-      border-color: rgba(0, 0, 0, 0.1);
-      color: #333;
+      background: rgba(255, 255, 255, 0.15);
     }
 
     body.light-mode .icon-btn {
-      background: rgba(0, 0, 0, 0.05);
-      color: #333;
-      border-color: rgba(0, 0, 0, 0.2);
+      background: rgba(0, 10, 32, 0.04);
+      border-color: rgba(0, 10, 32, 0.08);
+      color: #0d1627;
     }
 
     body.light-mode .icon-btn:hover {
-      background: rgba(0, 0, 0, 0.1);
-      border-color: rgba(0, 0, 0, 0.3);
-    }
-
-    body.light-mode .btn-start {
-      background: #4CAF50;
-      color: white;
-    }
-
-    body.light-mode .btn-stop {
-      background: #f44336;
-      color: white;
-    }
-
-    body.light-mode .divider {
-      background: rgba(0, 0, 0, 0.1);
+      background: rgba(0, 10, 32, 0.09);
+      border-color: rgba(0, 10, 32, 0.14);
     }
 
     .status {
+      padding: 14px 16px;
+      border-radius: 20px;
       text-align: center;
-      margin-bottom: 12px;
-      padding: 10px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.2);
+      background: linear-gradient(130deg, rgba(122, 245, 255, 0.18), rgba(255, 123, 233, 0.12));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
 
     .status.active {
-      background: rgba(76, 175, 80, 0.25);
-      border-color: rgba(76, 175, 80, 0.4);
+      border-color: rgba(45, 231, 137, 0.4);
+      background: linear-gradient(130deg, rgba(45, 231, 137, 0.25), rgba(122, 245, 255, 0.15));
+      box-shadow: 0 12px 30px rgba(45, 231, 137, 0.25);
     }
 
     .status.inactive {
-      background: rgba(244, 67, 54, 0.25);
-      border-color: rgba(244, 67, 54, 0.4);
+      border-color: rgba(255, 93, 113, 0.35);
+      background: linear-gradient(130deg, rgba(255, 93, 113, 0.2), rgba(255, 123, 233, 0.1));
+    }
+
+    body.light-mode .status {
+      background: rgba(255, 255, 255, 0.78);
+      border-color: rgba(8, 14, 40, 0.08);
+      color: #0d1627;
+      box-shadow: 0 12px 30px rgba(135, 151, 180, 0.2);
     }
 
     #status-text {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
-      margin-bottom: 2px;
+      margin: 0 0 3px 0;
+    }
+
+    .platform-info {
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    body.light-mode .platform-info {
+      color: rgba(13, 22, 39, 0.6);
     }
 
     .controls {
       display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      border: none;
+      border-radius: 18px;
+      padding: 12px 16px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      filter: grayscale(0.2);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn:not(:disabled):hover {
+      transform: translateY(-2px);
+    }
+
+    .btn[data-variant="start"] {
+      background: linear-gradient(135deg, #2de789, #7af5ff);
+      color: #03120f;
+    }
+
+    .btn[data-variant="stop"] {
+      background: linear-gradient(135deg, #ff5d71, #ff7be9);
+      color: #1e020c;
     }
 
     .card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-radius: 10px;
-      padding: 10px;
-      margin-bottom: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: var(--glass);
+      border-radius: 24px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(28px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    body.light-mode .card {
+      background: rgba(255, 255, 255, 0.78);
+      border-color: rgba(8, 14, 40, 0.08);
+      color: #0d1627;
+      box-shadow: 0 12px 30px rgba(135, 151, 180, 0.2);
     }
 
     .card-header {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 6px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: space-between;
+      gap: 12px;
     }
 
-    .card-header input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-      margin: 0;
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
     }
 
     .card-icon {
-      font-size: 15px;
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background: linear-gradient(140deg, rgba(122, 245, 255, 0.18), rgba(255, 123, 233, 0.12));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+
+    .toggle-track {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.25s ease;
+    }
+
+    .toggle-track::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ffffff;
+      top: 2px;
+      left: 2px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35);
+      transition: transform 0.25s ease;
+    }
+
+    .toggle input:checked + .toggle-track {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    .toggle input:checked + .toggle-track::after {
+      transform: translateX(20px);
+    }
+
+    body.light-mode .toggle-track {
+      background: rgba(0, 0, 0, 0.08);
+      border-color: rgba(0, 0, 0, 0.12);
     }
 
     .card-content {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-    }
-
-    .btn {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 13px;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    .btn-start {
-      background: #4CAF50;
-      color: white;
-    }
-
-    .btn-start:hover {
-      background: #45a049;
-    }
-
-    .btn-stop {
-      background: #f44336;
-      color: white;
-    }
-
-    .btn-stop:hover {
-      background: #da190b;
-    }
-
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+      gap: 10px;
     }
 
     .setting-group {
-      margin-bottom: 4px;
-    }
-
-    .setting-group:last-child {
-      margin-bottom: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     .setting-group label {
-      display: block;
-      margin-bottom: 3px;
       font-size: 12px;
-      font-weight: 500;
-      opacity: 0.9;
-    }
-
-    .checkbox-label {
+      color: var(--text-muted);
       display: flex;
-      align-items: center;
-      cursor: pointer;
-      padding: 4px;
-      border-radius: 6px;
-      transition: background 0.2s;
-      margin-bottom: 0;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
     }
 
-    .checkbox-label:hover {
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .checkbox-label span {
-      font-size: 12px;
-    }
-
-    .setting-group input[type="range"] {
-      width: 100%;
-      margin-bottom: 1px;
-      margin-top: 1px;
-      height: 4px;
-    }
-
-    .setting-group input[type="checkbox"] {
-      margin-right: 8px;
-      margin-top: 0;
-      margin-bottom: 0;
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-    }
-
-    .range-value {
-      font-size: 10px;
-      opacity: 0.65;
-      margin-top: 1px;
-      margin-bottom: 0;
-    }
-
-    .divider {
-      height: 1px;
-      background: rgba(255, 255, 255, 0.15);
-      margin: 8px 0;
+    body.light-mode .setting-group label {
+      color: rgba(13, 22, 39, 0.7);
     }
 
     .range-container {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       align-items: center;
+      width: 100%;
     }
 
     .range-input {
       flex: 1;
     }
 
-    .range-input input {
+    input[type="range"] {
+      -webkit-appearance: none;
       width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid var(--accent);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid var(--accent);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+    }
+
+    body.light-mode input[type="range"] {
+      background: rgba(0, 0, 0, 0.08);
+      border-color: rgba(0, 0, 0, 0.05);
     }
 
     .range-separator {
-      font-weight: bold;
       font-size: 12px;
+      font-weight: 700;
+      opacity: 0.7;
     }
 
-    .platform-info {
-      text-align: center;
-      font-size: 10px;
-      opacity: 0.75;
-      margin-top: 3px;
+    .range-value {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    body.light-mode .range-value {
+      color: rgba(13, 22, 39, 0.6);
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+    }
+
+    body.light-mode .divider {
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+    }
+
+    .btn[data-variant="amber"] {
+      background: linear-gradient(135deg, #ffb347, #ffcc33);
+      color: #2a1600;
+    }
+
+    .btn[data-variant="pink"] {
+      background: linear-gradient(135deg, #ff758c, #ff7be9);
+      color: #24000f;
+    }
+
+    .btn[data-variant="violet"] {
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+      color: #1b0524;
     }
 
     .warning {
-      background: rgba(255, 193, 7, 0.2);
-      border: 1px solid rgba(255, 193, 7, 0.4);
-      border-radius: 8px;
-      padding: 8px;
-      margin-bottom: 12px;
-      font-size: 10px;
+      border-radius: 16px;
+      padding: 10px 12px;
+      font-size: 11px;
       text-align: center;
-      backdrop-filter: blur(10px);
+      background: rgba(255, 193, 7, 0.18);
+      border: 1px solid rgba(255, 193, 7, 0.34);
+      color: #fadd8a;
     }
-
   </style>
 </head>
 <body>
-  <div class="header">
-    <div style="width: 60px;"></div>
-    <div class="header-title">
-      <h1 id="title">🌊 Auto Surfer</h1>
+  <main class="app-shell">
+    <div class="header">
+      <div class="header-title">
+        <h1 id="title">🌊 Auto Surfer</h1>
+      </div>
+      <div class="header-buttons">
+        <button id="langBtn" class="icon-btn" title="Switch Language">🇻🇳</button>
+        <button id="themeBtn" class="icon-btn" title="Toggle Theme">☀️</button>
+      </div>
     </div>
-    <div class="header-buttons">
-      <button id="langBtn" class="icon-btn" title="Switch Language">🇻🇳</button>
-      <button id="themeBtn" class="icon-btn" title="Toggle Theme">☀️</button>
+
+    <div id="status" class="status inactive">
+      <div id="status-text">Inactive</div>
+      <div id="platform-text" class="platform-info">Detecting platform...</div>
     </div>
-  </div>
 
-  <div id="status" class="status inactive">
-    <div id="status-text">Inactive</div>
-    <div id="platform-text" class="platform-info">Detecting platform...</div>
-  </div>
-
-  <div class="controls">
-    <button id="startBtn" class="btn btn-start">Start Surfing</button>
-    <button id="stopBtn" class="btn btn-stop" disabled>Stop</button>
-  </div>
-
-  <!-- Scrolling Card -->
-  <div class="card">
-    <div class="card-header">
-      <span class="card-icon">📜</span>
-      <span id="autoScrollingLabel">Auto Scrolling</span>
+    <div class="controls">
+      <button id="startBtn" class="btn btn-start" data-variant="start">Start Surfing</button>
+      <button id="stopBtn" class="btn btn-stop" data-variant="stop" disabled>Stop</button>
     </div>
-    <div class="card-content">
-      <div class="setting-group">
-        <label><span id="scrollSpeedRangeLabel">Scroll Speed Range</span>: <span id="scrollSpeedValue">2s - 4s</span></label>
-        <div class="range-container">
-          <div class="range-input">
-            <input type="range" id="scrollSpeedMin" min="1000" max="20000" step="1000" value="2000">
-            <div class="range-value"><span id="minLabel">Min</span>: <span id="scrollSpeedMinValue">2s</span></div>
-          </div>
-          <div class="range-separator">-</div>
-          <div class="range-input">
-            <input type="range" id="scrollSpeedMax" min="1000" max="30000" step="1000" value="4000">
-            <div class="range-value"><span id="maxLabel">Max</span>: <span id="scrollSpeedMaxValue">4s</span></div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="card-icon">📜</span>
+          <span id="autoScrollingLabel">Auto Scrolling</span>
+        </div>
+      </div>
+      <div class="card-content">
+        <div class="setting-group">
+          <label><span id="scrollSpeedRangeLabel">Scroll Speed Range</span><span id="scrollSpeedValue">2s - 4s</span></label>
+          <div class="range-container">
+            <div class="range-input">
+              <input type="range" id="scrollSpeedMin" min="1000" max="20000" step="1000" value="2000">
+              <div class="range-value"><span id="minLabel">Min</span>: <span id="scrollSpeedMinValue">2s</span></div>
+            </div>
+            <div class="range-separator">-</div>
+            <div class="range-input">
+              <input type="range" id="scrollSpeedMax" min="1000" max="30000" step="1000" value="4000">
+              <div class="range-value"><span id="maxLabel">Max</span>: <span id="scrollSpeedMaxValue">4s</span></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Expand Content Card -->
-  <div class="card">
-    <div class="card-header">
-      <input type="checkbox" id="enableSeeMore">
-      <span class="card-icon">👁️</span>
-      <span id="expandContentLabel">Expand Content</span>
-    </div>
-    <div class="card-content">
-      <div class="setting-group">
-        <label for="seeMoreDelay"><span id="clickDelayLabel">Click Delay</span>: <span id="seeMoreDelayValue">2s</span></label>
-        <input type="range" id="seeMoreDelay" min="1000" max="10000" step="500" value="2000">
-        <div class="range-value" id="fasterSlowerLabel">Faster ← → Slower</div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="card-icon">👁️</span>
+          <span id="expandContentLabel">Expand Content</span>
+        </div>
+        <label class="toggle" for="enableSeeMore">
+          <input type="checkbox" id="enableSeeMore">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="card-content">
+        <div class="setting-group">
+          <label for="seeMoreDelay"><span id="clickDelayLabel">Click Delay</span><span id="seeMoreDelayValue">2s</span></label>
+          <input type="range" id="seeMoreDelay" min="1000" max="10000" step="500" value="2000">
+          <div class="range-value" id="fasterSlowerLabel">Faster ← → Slower</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Auto Like Card -->
-  <div class="card">
-    <div class="card-header">
-      <input type="checkbox" id="enableAutoLike">
-      <span class="card-icon">❤️</span>
-      <span id="autoLikeLabel">Auto Like</span>
-    </div>
-    <div class="card-content">
-      <div class="setting-group">
-        <label for="likeDelay"><span id="likeDelayLabel">Like Delay</span>: <span id="likeDelayValue">5s</span></label>
-        <input type="range" id="likeDelay" min="2000" max="30000" step="1000" value="5000">
-        <div class="range-value" id="moreFrequentLabel1">More Frequent ← → Less Frequent</div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="card-icon">❤️</span>
+          <span id="autoLikeLabel">Auto Like</span>
+        </div>
+        <label class="toggle" for="enableAutoLike">
+          <input type="checkbox" id="enableAutoLike">
+          <span class="toggle-track"></span>
+        </label>
       </div>
+      <div class="card-content">
+        <div class="setting-group">
+          <label for="likeDelay"><span id="likeDelayLabel">Like Delay</span><span id="likeDelayValue">5s</span></label>
+          <input type="range" id="likeDelay" min="2000" max="30000" step="1000" value="5000">
+          <div class="range-value" id="moreFrequentLabel1">More Frequent ← → Less Frequent</div>
+        </div>
 
-      <div class="setting-group">
-        <label for="likeProbability"><span id="likeProbabilityLabel">Like Probability</span>: <span id="likeProbabilityValue">70%</span></label>
-        <input type="range" id="likeProbability" min="0" max="100" step="5" value="70">
-        <div class="range-value" id="neverAlwaysLabel1">Never ← → Always</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Auto Comment Card -->
-  <div class="card">
-    <div class="card-header">
-      <input type="checkbox" id="enableAutoComment">
-      <span class="card-icon">💬</span>
-      <span id="autoCommentLabel">Auto Comment</span>
-    </div>
-    <div class="card-content">
-      <div class="setting-group">
-        <label for="commentDelay"><span id="commentDelayLabel">Comment Delay</span>: <span id="commentDelayValue">8s</span></label>
-        <input type="range" id="commentDelay" min="5000" max="60000" step="1000" value="8000">
-        <div class="range-value" id="moreFrequentLabel2">More Frequent ← → Less Frequent</div>
-      </div>
-
-      <div class="setting-group">
-        <label for="commentProbability"><span id="commentProbabilityLabel">Comment Probability</span>: <span id="commentProbabilityValue">30%</span></label>
-        <input type="range" id="commentProbability" min="0" max="100" step="5" value="30">
-        <div class="range-value" id="neverAlwaysLabel2">Never ← → Always</div>
+        <div class="setting-group">
+          <label for="likeProbability"><span id="likeProbabilityLabel">Like Probability</span><span id="likeProbabilityValue">70%</span></label>
+          <input type="range" id="likeProbability" min="0" max="100" step="5" value="70">
+          <div class="range-value" id="neverAlwaysLabel1">Never ← → Always</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="divider"></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="card-icon">💬</span>
+          <span id="autoCommentLabel">Auto Comment</span>
+        </div>
+        <label class="toggle" for="enableAutoComment">
+          <input type="checkbox" id="enableAutoComment">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="card-content">
+        <div class="setting-group">
+          <label for="commentDelay"><span id="commentDelayLabel">Comment Delay</span>: <span id="commentDelayValue">8s</span></label>
+          <input type="range" id="commentDelay" min="5000" max="60000" step="1000" value="8000">
+          <div class="range-value" id="moreFrequentLabel2">More Frequent ← → Less Frequent</div>
+        </div>
 
-  <!-- Test Buttons -->
-  <div class="card">
-    <div class="card-header">
-      <span class="card-icon">🧪</span>
-      <span id="testingToolsLabel">Testing Tools</span>
+        <div class="setting-group">
+          <label for="commentProbability"><span id="commentProbabilityLabel">Comment Probability</span>: <span id="commentProbabilityValue">30%</span></label>
+          <input type="range" id="commentProbability" min="0" max="100" step="5" value="30">
+          <div class="range-value" id="neverAlwaysLabel2">Never ← → Always</div>
+        </div>
+      </div>
     </div>
-    <div class="card-content">
-      <button id="testSeeMoreBtn" class="btn" style="background: #FF9800; color: white;">Test "See More"</button>
-      <button id="testLikeBtn" class="btn" style="background: #E91E63; color: white;">Test "Like Post"</button>
-      <button id="testCommentBtn" class="btn" style="background: #9C27B0; color: white;">Test "Comment"</button>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="card-icon">🧪</span>
+          <span id="testingToolsLabel">Testing Tools</span>
+        </div>
+      </div>
+      <div class="card-content test-grid">
+        <button id="testSeeMoreBtn" class="btn" data-variant="amber">Test "See More"</button>
+        <button id="testLikeBtn" class="btn" data-variant="pink">Test "Like Post"</button>
+        <button id="testCommentBtn" class="btn" data-variant="violet">Test "Comment"</button>
+      </div>
     </div>
-  </div>
+
+    <!-- Support Me Section -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="card-icon">☕</span>
+          <span id="supportLabel">Support Me</span>
+        </div>
+      </div>
+      <div class="card-content">
+        <button id="supportBtn" class="btn" data-variant="primary">Buy me a phin ☕</button>
+        <div id="supportQRContainer" style="display: none; margin-top: 12px; text-align: center;">
+          <img id="supportQR" src="SupportQR.jpeg" alt="Support QR Code" style="max-width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+        </div>
+      </div>
+    </div>
+  </main>
 
   <script src="popup.js"></script>
 </body>
