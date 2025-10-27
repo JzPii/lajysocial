@@ -12,6 +12,8 @@ Công cụ social cho người vừa lười vừa anti social như mình nhưng
 - **Tùy chỉnh xác suất như thật**: Điều chỉnh tỷ lệ thích/bình luận để tránh tương tác với mọi bài viết
 - **Thống kê phiên làm việc**: Làm xong có report luôn
 
+![Adobe Express - Screen Recording 2025-10-25 at 12 15 09](https://github.com/user-attachments/assets/7190160e-a780-4b97-bc07-caa76811f485)
+
 ## 📥 Cài đặt
 
 ### Bước 1: Tải xuống tiện ích
