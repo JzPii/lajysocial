@@ -1,214 +1,183 @@
-# LajySocial - Tự động Tương tác Mạng xã hội
+# 🌊 LajySocial - Tự động Tương tác Mạng xã hội
+
+**[English version below](#english) 👇**
 
 Công cụ social cho người vừa lười vừa anti social như mình nhưng vẫn phải social. Chạy hoàn toàn sạch. không backend không API. Đảm bảo clean không bao giờ lo bị ban. Twitter/X, Facebook, Instagram, LinkedIn và Reddit.
 
 ## 🌟 Tính năng
 
 - **Tự lướt** với tốc độ ngẫu nhiên giống mấy thằng lướt lướt
-- **Tự động thả tim** với tỷ lệ phần trăm có thể điều chỉnh. 
+- **Tự động thả tim** với tỷ lệ phần trăm có thể điều chỉnh
 - **Tự động mõm** với các câu trả lời tích cực và tỷ lệ tùy chỉnh (Ủng hộ để sau này làm tính năng chửi)
-- **Giả vờ đọc chắm chú "Xem thêm"** để mở rộng nội dung bài viết
-
+- **Giả vờ đọc chăm chú "Xem thêm"** để mở rộng nội dung bài viết
 - **Tùy chỉnh xác suất như thật**: Điều chỉnh tỷ lệ thích/bình luận để tránh tương tác với mọi bài viết
 - **Thống kê phiên làm việc**: Làm xong có report luôn
 
-![Adobe Express - Screen Recording 2025-10-25 at 12 15 09](https://github.com/user-attachments/assets/7190160e-a780-4b97-bc07-caa76811f485)
+<img src="https://github.com/user-attachments/assets/7190160e-a780-4b97-bc07-caa76811f485" alt="Demo" width="400">
 
-## 📥 Cài đặt
+## 📥 Cài đặt Nhanh
 
-### Bước 1: Tải xuống tiện ích
+1. **Download** → Giải nén folder về máy
+2. **Chrome** → Gõ `chrome://extensions/` → Bật **"Developer mode"**
+3. **"Load unpacked"** → Chọn folder vừa giải nén
+4. **Done!** Icon 🌊 xuất hiện trên thanh công cụ
 
-1. Tải xuống toàn bộ thư mục này về máy tính
-2. Giải nén (nếu ở dạng file ZIP) vào một thư mục bất kỳ
-3. Nhớ vị trí thư mục này (ví dụ: `Downloads/ChromeExt`)
+## 🚀 Cách dùng
 
-### Bước 2: Mở trang Tiện ích mở rộng của Chrome
+| Tính năng | Cài đặt | Mô tả |
+|-----------|---------|-------|
+| 📜 **Tự lướt** | Tốc độ: 1-30s | Thời gian giữa các lần cuộn |
+| ❤️ **Tự thả tim** | Xác suất: 0-100%<br>Delay: 2-30s | Tỷ lệ like bài viết<br>Thời gian chờ sau khi like |
+| 💬 **Tự mõm** | Xác suất: 0-100%<br>Delay: 5-60s | Tỷ lệ comment<br>Thời gian chờ sau comment |
+| 👁️ **Xem thêm** | Delay: 1-10s | Tự động nhấp "See more" |
 
-**Cách 1 - Qua Menu:**
-1. Mở trình duyệt Chrome
-2. Nhấp vào **3 chấm dọc** ở góc trên bên phải
-3. Di chuột vào **"Tiện ích mở rộng"**
-4. Chọn **"Quản lý tiện ích mở rộng"**
+**Bắt đầu**: Click icon 🌊 → Cấu hình cài đặt → Nhấn **"Start Surfing"**
+**Dừng**: Nhấn nút **"Stop"**
 
-**Cách 2 - Qua thanh địa chỉ:**
-1. Mở trình duyệt Chrome
-2. Gõ vào thanh địa chỉ: `chrome://extensions/`
-3. Nhấn Enter
+## ⚙️ Profile Gợi ý
 
-### Bước 3: Bật chế độ Developer (Nhà phát triển)
+| Profile | Cuộn | Like | Comment | See More |
+|---------|------|------|---------|----------|
+| **Người mới** | 3-6s | 50%, 5s | TẮT | BẬT, 2s |
+| **Vừa phải** | 2-4s | 70%, 5s | 20%, 10s | BẬT, 2s |
+| **Mạnh tay** | 2-3s | 90%, 3s | 40%, 8s | BẬT, 1s |
 
-1. Ở trang Tiện ích mở rộng, tìm công tắc **"Chế độ nhà phát triển"** (Developer mode) ở góc trên bên phải
-2. Nhấp vào công tắc để **BẬT** (màu xanh)
+## 🧪 Test Functions
 
-![Bật chế độ Developer]
+- **Test "See More"**: Làm nổi bật các nút "Xem thêm"
+- **Test "Like Post"**: Thử like bài đầu tiên
+- **Test "Comment"**: Mở comment box (an toàn, không gửi)
 
-### Bước 4: Tải tiện ích vào Chrome
+<details>
+<summary>🔍 Xem Console Logs (F12)</summary>
 
-1. Sau khi bật chế độ Developer, sẽ xuất hiện 3 nút mới
-2. Nhấp vào nút **"Tải tiện ích đã giải nén"** (Load unpacked)
-3. Một cửa sổ chọn thư mục sẽ hiện ra
-4. Chọn thư mục chứa tiện ích (thư mục có file `manifest.json`)
-5. Nhấp **"Chọn thư mục"** (Select Folder)
+Để xem chi tiết hoạt động:
+- Nhấn **F12** → Chọn tab **"Console"**
+- Thấy được: Từng bước engagement, xác suất checks `Roll: 45.3%, Result: LIKE`, session stats
+</details>
 
-![Load unpacked]
+<details>
+<summary>🐛 Gỡ lỗi</summary>
 
-### Bước 5: Xác nhận cài đặt thành công
+**Không hoạt động?** Bật công tắc Enable → Refresh (F5) → Check Console (F12)
+**Không tìm thấy nút?** Dùng test buttons → Check platform compatibility
+**Con trỏ di chuyển nhưng không nhấp?** Tăng delays → Refresh page
+</details>
 
-1. Tiện ích **"LajySocial"** sẽ xuất hiện trong danh sách
-2. Icon 🌊 sẽ hiển thị trên thanh công cụ của Chrome
-3. Nếu không thấy icon, nhấp vào **icon puzzle** (hình mảnh ghép) và ghim tiện ích
+<details>
+<summary>🔄 Cập nhật / Gỡ cài đặt</summary>
 
-![Extension installed]
+**Cập nhật:**
+1. Download phiên bản mới
+2. Vào `chrome://extensions/` → Xóa version cũ
+3. Load unpacked lại
 
-## 🚀 Cách sử dụng
-
-### Bước 1: Truy cập mạng xã hội
-
-### Bước 2: Mở bảng điều khiển tiện ích
-
-1. Nhấp vào **icon 🌊** của tiện ích trên thanh công cụ
-2. Cửa sổ popup sẽ hiện ra với các tùy chọn
-
-### Bước 3: Cấu hình cài đặt
-
-**📜 tự lướt:**
-- **Tốc độ cuộn**: Kéo 2 thanh trượt để đặt thời gian giữa các lần cuộn (từ 1-30 giây)
-
-**❤️ Tự động thả tim:**
-- Bật công tắc **"Enable Auto Like"**
-- **Like Delay**: Thời gian chờ sau khi thích (2-30 giây)
-- **Like Probability**: Xác suất thích bài viết (0-100%)
-  - 0% = Không bao giờ thích
-  - 100% = Luôn thích mọi bài
-  - 70% (mặc định) = Thích khoảng 7/10 bài viết
-
-**💬 Tự động mõm:**
-- Bật công tắc **"Enable Auto Comments"**
-- **Comment Delay**: Thời gian chờ sau khi bình luận (5-60 giây)
-- **Comment Probability**: Xác suất bình luận (0-100%)
-  - 0% = Không bao giờ bình luận
-  - 100% = Luôn bình luận mọi bài
-  - 30% (mặc định) = Bình luận khoảng 3/10 bài viết
-
-**👁️ giả vờ đọc chăm chú:**
-- Bật công tắc **"Auto Click See More"**
-- **Click Delay**: Thời gian giữa các lần nhấp (1-10 giây)
-
-### Bước 4: Khởi động tiện ích
-
-1. Sau khi cấu hình xong, nhấp nút **"Start Surfing"** (màu xanh lá)
-2. Tiện ích sẽ bắt đầu hoạt động:
-   - Tự động cuộn trang
-   - Tìm bài viết chưa tương tác
-   - Nhấp "Xem thêm" (nếu bật)
-   - Thích bài viết (theo xác suất đã đặt)
-   - Bình luận (theo xác suất đã đặt)
-3. Bạn sẽ thấy con trỏ chuột **màu đỏ** di chuyển và thực hiện các thao tác
-4. Thông báo sẽ hiện ở góc trên bên phải màn hình
-
-### Bước 5: Dừng tiện ích
-
-1. Nhấp vào icon tiện ích
-2. Nhấp nút **"Stop"** (màu đỏ)
-3. Thống kê phiên làm việc sẽ hiển thị trong console
-
-## 🧪 Chức năng thử nghiệm
-
-Trước khi sử dụng chính thức, bạn có thể kiểm tra từng tính năng:
-
-**🔍 Test "See More"**: Tìm và làm nổi bật các nút "Xem thêm" trên trang
-
-**❤️ Test "Like Post"**: Thử thích bài viết đầu tiên hiển thị
-
-**💬 Test "Comment"**: Mở hộp bình luận và gõ văn bản (KHÔNG gửi đi)
-
-*Lưu ý: Chức năng test an toàn và không thực sự gửi bình luận.*
-
-## ⚙️ Cài đặt khuyên dùng
-
-### Cho người mới bắt đầu:
-```
-Tốc độ cuộn: 3s - 6s
-Auto Like: BẬT, 50%, Delay 5s
-Auto Comment: TẮT
-See More: BẬT, Delay 2s
-```
-
-### Cho tương tác vừa phải:
-```
-Tốc độ cuộn: 2s - 4s
-Auto Like: BẬT, 70%, Delay 5s
-Auto Comment: BẬT, 20%, Delay 10s
-See More: BẬT, Delay 2s
-```
-
-### Cho tương tác mạnh:
-```
-Tốc độ cuộn: 2s - 3s
-Auto Like: BẬT, 90%, Delay 3s
-Auto Comment: BẬT, 40%, Delay 8s
-See More: BẬT, Delay 1s
-```
-
-## 🔍 Xem nhật ký hoạt động (Console)
-
-Để xem chi tiết hoạt động của tiện ích:
-
-1. Nhấn phím **F12** (hoặc Ctrl+Shift+I trên Windows, Cmd+Option+I trên Mac)
-2. Chọn tab **"Console"**
-3. Bạn sẽ thấy:
-   - Từng bước trong chu trình tương tác
-   - Xác suất kiểm tra: `Roll: 45.3%, Threshold: 70%, Result: LIKE`
-   - Số lượng bài viết đã xem, thích, bình luận
-   - Các lỗi (nếu có)
+**Gỡ cài đặt:**
+1. Vào `chrome://extensions/`
+2. Tìm "LajySocial" → Nhấn "Xóa"
+</details>
 
 ## ⚠️ Lưu ý quan trọng
 
-1. **Sử dụng có trách nhiệm**: Tiện ích này chỉ nên dùng cho mục đích cá nhân và thử nghiệm
-2. **Tuân thủ điều khoản**: Việc tự động hóa có thể vi phạm điều khoản dịch vụ của một số nền tảng
-3. **Không lạm dụng**: Đặt xác suất và độ trễ hợp lý để tránh bị phát hiện
-4. **Giám sát**: Luôn theo dõi hoạt động của tiện ích khi chạy
-5. **Rủi ro**: Tài khoản của bạn có thể bị hạn chế hoặc khóa nếu phát hiện hành vi bất thường
-
-## 🐛 Gỡ lỗi
-
-### Tiện ích không hoạt động:
-- Kiểm tra xem bạn đã bật công tắc "Enable Auto Like" hoặc "Enable Auto Comment" chưa
-- Làm mới trang (F5) và thử lại
-- Mở Console (F12) để xem thông báo lỗi
-
-### Không tìm thấy nút thích/bình luận:
-- Mỗi nền tảng có cấu trúc khác nhau, một số bài viết có thể không có nút
-- Sử dụng nút "Test Like" hoặc "Test Comment" để kiểm tra
-- Kiểm tra Console để xem chi tiết
-
-### Con trỏ di chuyển nhưng không nhấp:
-- Một số nền tảng chặn tương tác tự động
-- Thử tăng thời gian delay
-- Làm mới trang và thử lại
-
-## 🔄 Cập nhật tiện ích
-
-Khi có phiên bản mới:
-
-1. Tải xuống phiên bản mới
-2. Vào `chrome://extensions/`
-3. Nhấp nút **"Xóa"** ở tiện ích cũ
-4. Làm theo hướng dẫn cài đặt từ Bước 4
-
-## 📝 Gỡ cài đặt
-
-1. Vào `chrome://extensions/`
-2. Tìm tiện ích **"LajySocial"**
-3. Nhấp nút **"Xóa"**
-4. Xác nhận xóa
-
-## 🙋 Hỗ trợ
-
-Nếu gặp vấn đề:
-1. Kiểm tra phần "Gỡ lỗi" ở trên
-2. Xem Console (F12) để tìm thông báo lỗi
-3. Thử tắt tiện ích, làm mới trang và bật lại
+1. **Dùng có trách nhiệm**: Chỉ cho mục đích cá nhân và thử nghiệm
+2. **Tuân thủ điều khoản**: Tự động hóa có thể vi phạm ToS của platform
+3. **Không lạm dụng**: Đặt xác suất hợp lý để tránh bị phát hiện
+4. **Giám sát**: Luôn theo dõi khi tool chạy
+5. **Rủi ro**: Account có thể bị hạn chế hoặc khóa nếu phát hiện hành vi bất thường
 
 ## 📄 Giấy phép
+
 **Lưu ý**: Tools này chỉ dành cho mục đích hoan hỉ vui vẻ. Người dùng phải tự chịu trách nhiệm nếu có vấn đề xảy ra.
+
+---
+
+# <a name="english"></a>🌊 LajySocial - Social Media Auto Surfer
+
+**[Tiếng Việt ở trên](#-lazysocial---tự-động-tương-tác-mạng-xã-hội) ☝️**
+
+A social tool for lazy anti-social people who still gotta be social. Runs 100% clean. No backend, no API. Guaranteed clean, never worry about bans. Works on Twitter/X, Facebook, Instagram, LinkedIn, and Reddit.
+
+## 🌟 Features
+
+- **Auto scroll** with random speeds like real human scrolling
+- **Auto like** with adjustable probability percentages
+- **Auto comment** with positive responses and custom rates (Support me for the roasting feature later)
+- **"See more" expansion** to read posts thoroughly (or pretend to)
+- **Probability customization like real behavior**: Adjust like/comment rates to avoid interacting with every damn post
+- **Session statistics**: Get reports when you're done
+
+<img src="https://github.com/user-attachments/assets/7190160e-a780-4b97-bc07-caa76811f485" alt="Demo" width="400">
+
+## 📥 Quick Install
+
+1. **Download** → Unzip the folder
+2. **Chrome** → Type `chrome://extensions/` → Enable **"Developer mode"**
+3. **"Load unpacked"** → Select the unzipped folder
+4. **Done!** The 🌊 icon appears on your toolbar
+
+## 🚀 How to Use
+
+| Feature | Settings | Description |
+|---------|----------|-------------|
+| 📜 **Auto Scroll** | Speed: 1-30s | Time between scrolls |
+| ❤️ **Auto Like** | Probability: 0-100%<br>Delay: 2-30s | Like post rate<br>Wait time after liking |
+| 💬 **Auto Comment** | Probability: 0-100%<br>Delay: 5-60s | Comment rate<br>Wait time after commenting |
+| 👁️ **See More** | Delay: 1-10s | Auto-click "See more" buttons |
+
+**Start**: Click 🌊 icon → Configure settings → Press **"Start Surfing"**
+**Stop**: Click **"Stop"** button
+
+## ⚙️ Recommended Profiles
+
+| Profile | Scroll | Like | Comment | See More |
+|---------|--------|------|---------|----------|
+| **Beginner** | 3-6s | 50%, 5s | OFF | ON, 2s |
+| **Moderate** | 2-4s | 70%, 5s | 20%, 10s | ON, 2s |
+| **Aggressive** | 2-3s | 90%, 3s | 40%, 8s | ON, 1s |
+
+## 🧪 Test Functions
+
+- **Test "See More"**: Highlights "See more" buttons on the page
+- **Test "Like Post"**: Tries liking the first visible post
+- **Test "Comment"**: Opens comment box (safe, doesn't actually submit)
+
+<details>
+<summary>🔍 View Console Logs (F12)</summary>
+
+To see detailed activity:
+- Press **F12** → Select **"Console"** tab
+- You'll see: Engagement cycle steps, probability checks `Roll: 45.3%, Result: LIKE`, session stats
+</details>
+
+<details>
+<summary>🐛 Troubleshooting</summary>
+
+**Not working?** Enable the toggle switches → Refresh (F5) → Check Console (F12)
+**Buttons not found?** Use test buttons → Check platform compatibility
+**Cursor moves but doesn't click?** Increase delays → Refresh page
+</details>
+
+<details>
+<summary>🔄 Update / Uninstall</summary>
+
+**Update:**
+1. Download new version
+2. Go to `chrome://extensions/` → Remove old version
+3. Load unpacked again
+
+**Uninstall:**
+1. Go to `chrome://extensions/`
+2. Find "LajySocial" → Click "Remove"
+</details>
+
+## ⚠️ Important Notes
+
+1. **Use responsibly**: For personal use and testing only
+2. **Follow ToS**: Automation may violate platform terms of service
+3. **Don't abuse it**: Set reasonable probabilities to avoid detection
+4. **Monitor it**: Always watch when the tool runs
+5. **Risk**: Your account may get restricted or banned if suspicious behavior is detected
+
+## 📄 License
+
+**Note**: This tool is for fun and giggles only. Users are responsible for any issues that arise.
