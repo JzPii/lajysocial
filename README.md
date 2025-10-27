@@ -13,7 +13,7 @@ Công cụ social cho người vừa lười vừa anti social như mình nhưng
 - **Tùy chỉnh xác suất như thật**: Điều chỉnh tỷ lệ thích/bình luận để tránh tương tác với mọi bài viết
 - **Thống kê phiên làm việc**: Làm xong có report luôn
 
-<img src="https://github.com/user-attachments/assets/7190160e-a780-4b97-bc07-caa76811f485" alt="Demo" width="400">
+<img src="https://github.com/user-attachments/assets/7190160e-a780-4b97-bc07-caa76811f485" alt="Demo" width="200">
 
 ## 📥 Cài đặt Nhanh
 
@@ -106,7 +106,7 @@ A social tool for lazy anti-social people who still gotta be social. Runs 100% c
 - **Probability customization like real behavior**: Adjust like/comment rates to avoid interacting with every damn post
 - **Session statistics**: Get reports when you're done
 
-<img src="https://github.com/user-attachments/assets/7190160e-a780-4b97-bc07-caa76811f485" alt="Demo" width="400">
+<img src="https://github.com/user-attachments/assets/7190160e-a780-4b97-bc07-caa76811f485" alt="Demo" width="200">
 
 ## 📥 Quick Install
 
