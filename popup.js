@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const testSeeMoreBtn = document.getElementById('testSeeMoreBtn');
   const testLikeBtn = document.getElementById('testLikeBtn');
   const testCommentBtn = document.getElementById('testCommentBtn');
+  const supportBtn = document.getElementById('supportBtn');
+  const supportQRContainer = document.getElementById('supportQRContainer');
   const statusDiv = document.getElementById('status');
   const statusText = document.getElementById('status-text');
   const platformText = document.getElementById('platform-text');
@@ -67,7 +69,10 @@ document.addEventListener('DOMContentLoaded', function() {
       neverAlways: "Never ← → Always",
       testSeeMore: 'Test "See More"',
       testLike: 'Test "Like Post"',
-      testComment: 'Test "Comment"'
+      testComment: 'Test "Comment"',
+      supportMe: "Support Me",
+      buyMeAPhin: "Buy me a phin ☕",
+      hideQRCode: "Thank YOU so much"
     },
     vi: {
       title: "Lướt Tự Động",
@@ -96,9 +101,12 @@ document.addEventListener('DOMContentLoaded', function() {
       fasterSlower: "Nhanh hơn ← → Chậm hơn",
       moreFrequent: "Thường xuyên hơn ← → Ít hơn",
       neverAlways: "Không bao giờ ← → Luôn luôn",
-      testSeeMore: 'test Tự ấn xem thêm',
-      testLike: 'test Tự thả tim',
-      testComment: 'test Tự bình luận'
+      testSeeMore: 'test Xem thêm',
+      testLike: 'test Tự thả like',
+      testComment: 'test Tự bình luận',
+      supportMe: "Ủng Hộ Tui",
+      buyMeAPhin: "Ủng hộ tui ly phin ☕",
+      hideQRCode: "Xin cảm ơn rất nhiềuu"
     }
   };
 
@@ -170,6 +178,14 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('autoLikeLabel').textContent = t.autoLike;
     document.getElementById('autoCommentLabel').textContent = t.autoComment;
     document.getElementById('testingToolsLabel').textContent = t.testingTools;
+    document.getElementById('supportLabel').textContent = t.supportMe;
+
+    // Update support button text based on current state
+    if (supportQRContainer.style.display === 'none') {
+      supportBtn.textContent = t.buyMeAPhin;
+    } else {
+      supportBtn.textContent = t.hideQRCode;
+    }
 
     // Update labels
     document.getElementById('scrollSpeedRangeLabel').textContent = t.scrollSpeedRange;
@@ -318,6 +334,18 @@ document.addEventListener('DOMContentLoaded', function() {
   testCommentBtn.addEventListener('click', async function() {
     if (currentTab) {
       chrome.tabs.sendMessage(currentTab.id, { action: 'testComment' });
+    }
+  });
+
+  supportBtn.addEventListener('click', function() {
+    const t = translations[currentLang];
+    // Toggle QR code visibility
+    if (supportQRContainer.style.display === 'none') {
+      supportQRContainer.style.display = 'block';
+      supportBtn.textContent = t.hideQRCode;
+    } else {
+      supportQRContainer.style.display = 'none';
+      supportBtn.textContent = t.buyMeAPhin;
     }
   });
 

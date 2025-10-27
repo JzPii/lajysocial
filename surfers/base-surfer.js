@@ -128,11 +128,8 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
   findSeeMoreButtons() {
     const buttons = [];
 
-    console.log(`=== FINDING SEE MORE BUTTONS FOR ${this.platform.toUpperCase()} ===`);
-
     // Convert NodeList to Array to allow push operations
     let posts = Array.from(document.querySelectorAll(this.selectors.posts));
-    console.log(`Found ${posts.length} posts using selector: ${this.selectors.posts}`);
 
     if (posts.length === 0 && this.platform === 'facebook') {
       // Facebook fallback - try alternative selectors
@@ -146,7 +143,6 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
 
       for (let selector of altSelectors) {
         const altPosts = document.querySelectorAll(selector);
-        console.log(`Trying alternative selector "${selector}": found ${altPosts.length} elements`);
         if (altPosts.length > 0) {
           posts.push(...altPosts);
           break;
@@ -158,8 +154,6 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
 
     // Special Facebook handling - search globally
     if (this.platform === 'facebook') {
-      console.log('Using Facebook-specific detection...');
-
       const allClickableElements = document.querySelectorAll(`
         div[role="button"],
         span[role="button"],
@@ -170,9 +164,7 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
         span[aria-label]
       `);
 
-      console.log(`Facebook: Found ${allClickableElements.length} total clickable elements on page`);
-
-      allClickableElements.forEach((element, elemIndex) => {
+      allClickableElements.forEach(element => {
         const text = element.textContent.trim();
         const ariaLabel = element.getAttribute('aria-label') || '';
 
@@ -184,7 +176,6 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
         });
 
         if (matchesPattern) {
-          console.log(`[Facebook] Found potential button #${elemIndex}: "${text}" (aria: "${ariaLabel}")`);
           buttons.push(element);
         }
       });
@@ -204,9 +195,7 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
         div[data-testid]
       `);
 
-      console.log(`Post ${postIndex}: Found ${clickableElements.length} clickable elements`);
-
-      clickableElements.forEach((element, elemIndex) => {
+      clickableElements.forEach(element => {
         const text = element.textContent.trim();
         const textLower = text.toLowerCase();
         const ariaLabel = (element.getAttribute('aria-label') || '');
@@ -225,13 +214,10 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
         const hasExpandPattern = text.includes('...') || ariaLabelLower.includes('expand');
 
         if (matchesKeyword || isEllipsis || hasExpandPattern) {
-          console.log(`[${this.platform}] Found button: "${text}" (aria: "${ariaLabel}") in post ${postIndex}, element ${elemIndex}`);
           buttons.push(element);
         }
       });
     });
-
-    console.log(`Total buttons found: ${buttons.length}`);
     return buttons;
   }
 
@@ -329,34 +315,39 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
       switch (message.action) {
         case 'start':
           this.start();
-          break;
+          sendResponse({ success: true });
+          return true;
         case 'stop':
           this.stop();
-          break;
+          sendResponse({ success: true });
+          return true;
         case 'updateSettings':
-          console.log('Updating settings:', message.settings);
           this.settings = { ...this.settings, ...message.settings };
-          console.log('New settings:', this.settings);
           this.saveSettings();
-          break;
+          sendResponse({ success: true });
+          return true;
         case 'getStatus':
           sendResponse({
             isActive: this.isActive,
             platform: this.platform,
             stats: this.sessionStats
           });
-          break;
+          return true;
         case 'testSeeMore':
           this.testSeeMoreButtons();
-          break;
+          sendResponse({ success: true });
+          return true;
         case 'testLike':
           this.testLikePost();
-          break;
+          sendResponse({ success: true });
+          return true;
         case 'testComment':
           this.testCommentPost();
-          break;
+          sendResponse({ success: true });
+          return true;
       }
-      return true; // Required for async sendResponse
+      // Only return true if we called sendResponse above
+      return false;
     });
   }
 
@@ -413,92 +404,79 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
     const engagementCycle = async () => {
       if (!this.isActive) return;
 
-      console.log('\n=== Starting New Engagement Cycle ===');
-
-      // Step 1: Scroll
-      console.log('Step 1: Scrolling...');
-      await this.performScroll();
-      await this.sleep(this.getRandomScrollDelay());
-
-      // Step 2: Pick one visible unengaged post
-      const posts = document.querySelectorAll(this.selectors.posts);
-
-      // Debug: Check each post's visibility and engagement status
-      const postDebug = Array.from(posts).map((post, i) => {
-        const rect = post.getBoundingClientRect();
-        const inViewport = this.isElementInViewport(post);
-        const engaged = post.getAttribute('data-surfer-engaged');
-        return {
-          index: i,
-          inViewport,
-          engaged,
-          rect: { top: rect.top, bottom: rect.bottom, height: rect.height },
-          windowHeight: window.innerHeight
-        };
-      });
-
-      const visiblePosts = Array.from(posts).filter(post =>
+      // Step 1: Check for visible unengaged posts
+      let posts = document.querySelectorAll(this.selectors.posts);
+      let visiblePosts = Array.from(posts).filter(post =>
         this.isElementInViewport(post) && !post.getAttribute('data-surfer-engaged')
       );
 
-      console.log(`Step 2: Selector "${this.selectors.posts}" found ${posts.length} total posts, ${visiblePosts.length} unengaged visible posts`);
-      console.log('Post debug:', postDebug);
-
+      // Step 2: If no visible posts, use smart scrolling to find one
       if (visiblePosts.length === 0) {
-        console.log('No unengaged posts found, continuing to scroll for new content...');
-        await this.sleep(2000);
-        this.scheduleNextCycle();
-        return;
+        console.log('[Engagement] No visible unengaged posts, starting smart scroll...');
+        const foundPost = await this.smartScrollUntilNewPost();
+
+        if (!foundPost) {
+          // No new posts found after scrolling, wait and retry
+          console.log('[Engagement] No new posts found, waiting 7s before retry...');
+          await this.sleep(7000);
+          this.scheduleNextCycle();
+          return;
+        }
+
+        // Re-check for visible posts after smart scrolling
+        posts = document.querySelectorAll(this.selectors.posts);
+        visiblePosts = Array.from(posts).filter(post =>
+          this.isElementInViewport(post) && !post.getAttribute('data-surfer-engaged')
+        );
+
+        if (visiblePosts.length === 0) {
+          // Still no posts (shouldn't happen, but safety check)
+          await this.sleep(5000);
+          this.scheduleNextCycle();
+          return;
+        }
       }
 
       const targetPost = visiblePosts[0];
+
+      // Step 3: Ensure post is fully engageable (interaction buttons visible)
+      if (!this.isPostFullyEngageable(targetPost)) {
+        console.log('[Engagement] Interaction buttons not fully visible, adjusting scroll...');
+        await this.scrollPostIntoEngageableView(targetPost);
+      }
+
       targetPost.setAttribute('data-surfer-engaged', 'true');
       this.sessionStats.totalPostsViewed++;
 
-      console.log(`Engaging with post #${this.sessionStats.totalPostsViewed}`);
+      console.log(`[Post #${this.sessionStats.totalPostsViewed}] Starting engagement`);
 
-      // Step 3: Click "see more" if enabled
+      // Step 4: Click "see more" if enabled
       if (this.settings.enableSeeMore) {
-        console.log('Step 3: Looking for "See More" button...');
         await this.clickSeeMoreOnPost(targetPost);
         await this.sleep(this.settings.seeMoreDelay);
-      } else {
-        console.log('Step 3: Skipped (See More disabled)');
       }
 
       // Step 4: Auto like if enabled and passes probability check
       if (this.settings.enableAutoLike) {
         const likeRoll = Math.random() * 100;
         const shouldLike = likeRoll < this.settings.likeProbability;
-        console.log(`Step 4: Like check - Roll: ${likeRoll.toFixed(1)}%, Threshold: ${this.settings.likeProbability}%, Result: ${shouldLike ? 'LIKE' : 'SKIP'}`);
 
         if (shouldLike) {
           await this.likePost(targetPost);
           await this.sleep(this.settings.likeDelay);
-        } else {
-          console.log('Step 4: Skipped (Probability check failed)');
         }
-      } else {
-        console.log('Step 4: Skipped (Auto Like disabled)');
       }
 
       // Step 5: Auto comment if enabled and passes probability check
       if (this.settings.enableAutoComment) {
         const commentRoll = Math.random() * 100;
         const shouldComment = commentRoll < this.settings.commentProbability;
-        console.log(`Step 5: Comment check - Roll: ${commentRoll.toFixed(1)}%, Threshold: ${this.settings.commentProbability}%, Result: ${shouldComment ? 'COMMENT' : 'SKIP'}`);
 
         if (shouldComment) {
           await this.commentPost(targetPost);
           await this.sleep(this.settings.commentDelay);
-        } else {
-          console.log('Step 5: Skipped (Probability check failed)');
         }
-      } else {
-        console.log('Step 5: Skipped (Auto Comment disabled)');
       }
-
-      console.log('=== Engagement Cycle Complete ===\n');
 
       await this.sleep(this.settings.postEngagementDelay);
       this.scheduleNextCycle();
@@ -515,12 +493,55 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
     }, 100);
   }
 
-  async performScroll() {
-    const scrollHeight = Math.floor(window.innerHeight * 0.8);
+  async performScroll(scrollAmount = null) {
+    const scrollHeight = scrollAmount || Math.floor(window.innerHeight * 0.8);
     window.scrollBy({
       top: scrollHeight,
       behavior: 'smooth'
     });
+  }
+
+  async smartScrollUntilNewPost() {
+    const MIN_SCROLL = 250; // minimum pixels to scroll
+    const MAX_SCROLL = 600; // maximum pixels to scroll
+    const MIN_DELAY = 400; // minimum ms to wait between scrolls
+    const MAX_DELAY = 800; // maximum ms to wait between scrolls
+    const MAX_ATTEMPTS = 10; // max scroll attempts before giving up
+
+    for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+      // Check if we're at the bottom of the page
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight;
+      const atBottom = scrollTop + clientHeight >= scrollHeight - 100; // 100px threshold
+
+      if (atBottom) {
+        console.log('[Smart Scroll] Reached bottom of page');
+        return false;
+      }
+
+      // Random scroll amount and delay for human-like behavior
+      const randomScrollAmount = Math.floor(Math.random() * (MAX_SCROLL - MIN_SCROLL + 1)) + MIN_SCROLL;
+      const randomDelay = Math.floor(Math.random() * (MAX_DELAY - MIN_DELAY + 1)) + MIN_DELAY;
+
+      // Perform small incremental scroll with randomization
+      await this.performScroll(randomScrollAmount);
+      await this.sleep(randomDelay);
+
+      // Check for visible unengaged posts
+      const posts = document.querySelectorAll(this.selectors.posts);
+      const visibleUnengagedPosts = Array.from(posts).filter(post =>
+        this.isElementInViewport(post) && !post.getAttribute('data-surfer-engaged')
+      );
+
+      if (visibleUnengagedPosts.length > 0) {
+        console.log(`[Smart Scroll] Found ${visibleUnengagedPosts.length} new post(s) after ${attempt + 1} scroll(s)`);
+        return true;
+      }
+    }
+
+    console.log('[Smart Scroll] Max attempts reached, no new posts found');
+    return false;
   }
 
   getRandomScrollDelay() {
@@ -543,9 +564,6 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
         button.setAttribute('data-surfer-clicked', 'true');
         this.sessionStats.totalSeeMoreClicked++;
         await this.humanLikeClick(button, `Clicked "${button.textContent.trim()}" 👁️`);
-        console.log('✓ See More clicked');
-      } else {
-        console.log('✗ No See More button found in this post');
       }
     } catch (error) {
       console.log('Error clicking See More:', error);
@@ -559,7 +577,6 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
 
       // Find all like buttons and filter out counters (e.g., "Like: 26 people")
       const allLikeButtons = post.querySelectorAll(this.selectors.likeButton || this.selectors.upvoteButton);
-      console.log('[Like] Found', allLikeButtons.length, 'like elements');
 
       // Filter: prefer buttons with shortest aria-label (avoids "Like: X people" counters)
       let likeButton = null;
@@ -567,7 +584,6 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
 
       allLikeButtons.forEach(btn => {
         const ariaLabel = btn.getAttribute('aria-label') || '';
-        console.log('[Like] Candidate:', ariaLabel);
 
         // Prefer exact match "Like" or shortest label without colons
         if (!ariaLabel.includes(':') && ariaLabel.length < shortestLength) {
@@ -576,12 +592,9 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
         }
       });
 
-      console.log('[Like] Selected button:', likeButton ? likeButton.getAttribute('aria-label') : 'none');
-
       if (likeButton) {
         const ariaPressed = likeButton.getAttribute('aria-pressed');
         const alreadyClicked = likeButton.getAttribute('data-surfer-liked');
-        console.log('[Like] aria-pressed:', ariaPressed, 'already-clicked:', alreadyClicked);
 
         const isNotLiked = ariaPressed !== 'true';
         const notClickedByUs = !alreadyClicked;
@@ -590,14 +603,11 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
           likeButton.setAttribute('data-surfer-liked', 'true');
           await this.sleep(Math.random() * 1000 + 500);
 
-          console.log('[Like] Attempting to click like button...');
           await this.humanLikeClick(likeButton, 'Liked a post! ❤️');
           didLike = true;
           this.sessionStats.totalPostsLiked++;
         }
       }
-
-      console.log(`Post #${postNumber}: Liked: ${didLike ? 'YES' : 'NO'}`);
     } catch (error) {
       console.log('[Like] Error:', error);
     }
@@ -605,16 +615,10 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
 
   async commentPost(post) {
     try {
-      const postNumber = this.sessionStats.totalPostsViewed;
-      let didComment = false;
-
       const commented = await this.addPositiveComment(post);
       if (commented) {
-        didComment = true;
         this.sessionStats.totalComments++;
       }
-
-      console.log(`Post #${postNumber}: Commented: ${didComment ? 'YES' : 'NO'}`);
     } catch (error) {
       console.log('[Comment] Error:', error);
     }
@@ -626,14 +630,12 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
       if (!commentButton || commentButton.getAttribute('data-surfer-commented')) return false;
 
       commentButton.setAttribute('data-surfer-commented', 'true');
-      console.log('[Comment] Clicking comment button...');
       await this.humanLikeClick(commentButton, 'Opening comment box...');
 
       await this.sleep(2000);
 
       // LinkedIn-specific handling
       if (this.platform === 'linkedin') {
-        console.log('[Comment] LinkedIn detected - looking for comment input area...');
         const commentInputs = [
           '.comments-comment-box__form',
           '.comments-comment-texteditor',
@@ -652,7 +654,6 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
         }
 
         if (commentInput) {
-          console.log('[Comment] Clicking LinkedIn comment input area...');
           await this.humanLikeClick(commentInput, 'Activating comment field...');
           await this.sleep(1000);
         }
@@ -690,20 +691,15 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
         await this.sleep(500);
 
         const randomResponse = this.positiveResponses[Math.floor(Math.random() * this.positiveResponses.length)];
-        console.log('[Comment] Typing:', randomResponse);
 
         await this.typeText(textArea, randomResponse);
         await this.sleep(1000 + Math.random() * 1000);
 
-        console.log('[Comment] Looking for submit button...');
         const submitButton = this.findSubmitButton(textArea);
 
         if (submitButton) {
-          console.log('[Comment] Clicking submit button...');
           await this.humanLikeClick(submitButton, 'Added positive comment! 💬');
           return true;
-        } else {
-          console.log('[Comment] Submit button not found or disabled');
         }
       }
       return false;
@@ -1074,8 +1070,6 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
     const isContentEditable = textArea.contentEditable === 'true' || textArea.getAttribute('contenteditable') === 'true';
 
     if (isContentEditable) {
-      console.log('Detected contenteditable element, using execCommand/innerHTML method');
-
       textArea.focus();
 
       const clickEvent = new MouseEvent('click', {
@@ -1097,8 +1091,6 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
 
       await this.sleep(200);
 
-      console.log('Starting to type character by character...');
-
       for (let i = 0; i < text.length; i++) {
         const char = text[i];
 
@@ -1116,8 +1108,6 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
           data: char
         }));
 
-        console.log(`Typed character ${i + 1}/${text.length}: "${char}"`);
-
         await this.sleep(Math.random() * 100 + 50);
 
         if (Math.random() < 0.1) {
@@ -1125,15 +1115,12 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
         }
       }
 
-      console.log('Finished typing. Final content:', textArea.textContent);
-
       textArea.dispatchEvent(new Event('input', { bubbles: true }));
       textArea.dispatchEvent(new Event('change', { bubbles: true }));
       textArea.blur();
       textArea.focus();
 
     } else {
-      console.log('Detected regular textarea/input, using value method');
 
       textArea.value = '';
 
@@ -1164,6 +1151,71 @@ window.BaseAutoSurfer = class BaseAutoSurfer {
       rect.left < (window.innerWidth || document.documentElement.clientWidth) &&
       rect.right > 0
     );
+  }
+
+  isPostFullyEngageable(post) {
+    // Check if post AND its interaction buttons are visible and accessible
+
+    // 1. Check if post container is at least partially visible
+    if (!this.isElementInViewport(post)) {
+      return false;
+    }
+
+    // 2. Find interaction buttons (like, comment)
+    const likeButton = post.querySelector(this.selectors.likeButton || this.selectors.upvoteButton);
+    const commentButton = post.querySelector(this.selectors.commentButton || this.selectors.replyButton);
+
+    // 3. Collect valid buttons
+    const buttons = [likeButton, commentButton].filter(btn => btn);
+
+    if (buttons.length === 0) {
+      // No buttons found (unusual), just check if post top is visible
+      const rect = post.getBoundingClientRect();
+      return rect.top >= 0 && rect.top < window.innerHeight * 0.8;
+    }
+
+    // 4. Check if at least one button is fully in viewport
+    for (const button of buttons) {
+      const rect = button.getBoundingClientRect();
+      const fullyVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
+      if (fullyVisible) {
+        return true; // At least one button fully visible
+      }
+    }
+
+    return false;
+  }
+
+  async scrollPostIntoEngageableView(post) {
+    // Scrolls post so interaction buttons are comfortably visible
+
+    // Find the lowest interaction element
+    const likeButton = post.querySelector(this.selectors.likeButton || this.selectors.upvoteButton);
+    const commentButton = post.querySelector(this.selectors.commentButton || this.selectors.replyButton);
+
+    const buttons = [likeButton, commentButton].filter(btn => btn);
+
+    if (buttons.length > 0) {
+      // Find the button with lowest position (furthest down the page)
+      let lowestButton = buttons[0];
+      let lowestBottom = lowestButton.getBoundingClientRect().bottom;
+
+      for (const button of buttons) {
+        const bottom = button.getBoundingClientRect().bottom;
+        if (bottom > lowestBottom) {
+          lowestButton = button;
+          lowestBottom = bottom;
+        }
+      }
+
+      // Scroll so the lowest button is comfortably in view (centered)
+      lowestButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      await this.sleep(500);
+    } else {
+      // Fallback: scroll post top into view
+      post.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      await this.sleep(500);
+    }
   }
 
   showNotification(message, type = 'info') {
